@@ -12,6 +12,7 @@ queue<string> tup;
 
 class Kernel{
 private:
+    map<long, float> bbl_area;
     vector<long> bbls;
     string output;
     vector<RealEstate> re;
@@ -23,39 +24,48 @@ public:
         this->cs = CSVManager(input);
         this->output = output;
         this->num_threads =n;
-        this->bbls = loadBBLS(bblslist);
+        this->bbl_area = loadBBLS(bblslist);
         shareBBLs();
     }
 
-    vector<long> loadBBLS(string bblslist){
-        vector<long> bbls;
+    map<long, float> loadBBLS(string bblslist){
+        map<long, float> bbls;
+        long bbl;
+        float area;
         CSVManager cs(bblslist);
         queue<string> fl = cs.read(true);
         while(!fl.empty()){
-            bbls.push_back(atol(fl.front().c_str()));
+            bbl = atol(fl.front().c_str());
             fl.pop();
+            area = atof(fl.front().c_str());
+            bbls[bbl] = area;
+            fl.pop();
+            this->bbls.push_back(bbl);
             fl = cs.read(true);
         }
         return bbls;
     }
 
     void shareBBLs(){
-        int offset = bbls.size() % this->num_threads;
-        int len = bbls.size() / this->num_threads;
-        unsigned int begin = 0, end = 0;
-        for(auto i : this->bbls){
+        long offset = bbls.size() % this->num_threads;
+        long len = bbls.size() / this->num_threads;
+        unsigned long begin = 0, end = 0;
+        long b, e;
+        while(end < bbls.size()-1){
             begin = end;
             end += len;
             if(offset){
                 end++;
                 offset--;
             }
-            if(end > bbls.size()){
-
-                end = bbls.size();
+            if(end >= bbls.size()){
+                end = bbls.size()-1;
             }
-            this->re.push_back(RealEstate(begin, end));
+            b = bbls[begin];
+            e = bbls[end];
+            this->re.push_back(RealEstate(b, e));
         }
+        vector<long>().swap(this->bbls);
     }
 
     bool getTup(){

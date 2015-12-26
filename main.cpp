@@ -19,6 +19,6 @@ int main(){
 //    input = argv[1];
 //    output = argv[2];
 
-    Kernel k("/home/marcio/Marcio/bbls.csv", "/home/marcio/Marcio/aip.csv", "/home/marcio/Marcio/t.csv", 3);
+    Kernel k("/home/marcio/Marcio/RealEstateFiles/bbls.csv", "/home/marcio/Marcio/RealEstateFiles/aip.csv", "/home/marcio/Marcio/RealEstateFiles/t.csv", 3);
     k.feedBunch();
 }
