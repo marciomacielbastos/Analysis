@@ -8,7 +8,7 @@ using namespace std;
 
 class SubUnit{
 private:
-    map<int,Point> timeSeries;
+    map<unsigned long,Point> timeSeries;
     string startDate;
 public:
     SubUnit(){
@@ -20,12 +20,18 @@ public:
     }
     void add(queue<string> p){
         Point pto(p, startDate);
-        map<int,Point>::iterator it;
+        map<unsigned long,Point>::iterator it;
         it = this->timeSeries.find(pto.getSlot());
         if (it!= this->timeSeries.end()){
             timeSeries[it->first] = it->second + pto;
         } else {
             this->timeSeries[pto.getSlot()] = pto;
+        }
+    }
+
+    void interpol(){
+        for(map<unsigned long, Point>::iterator it = timeSeries.begin(); it != timeSeries.end(); it++){
+
         }
     }
 };

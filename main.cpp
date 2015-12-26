@@ -21,4 +21,5 @@ int main(){
 
     Kernel k("/home/marcio/Marcio/RealEstateFiles/bbls.csv", "/home/marcio/Marcio/RealEstateFiles/aip.csv", "/home/marcio/Marcio/RealEstateFiles/t.csv", 3);
     k.feedBunch();
+    k.start();
 }

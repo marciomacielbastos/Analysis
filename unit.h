@@ -30,6 +30,12 @@ public:
             subunits[su_id].add(su);
         }
     }
+
+    void interpol(){
+        for(map<string, SubUnit>::iterator it = subunits.begin(); it != subunits.end(); it++){
+            (it->second).interpol();
+        }
+    }
 };
 
 #endif // UNIT_H

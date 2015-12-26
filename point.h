@@ -8,7 +8,7 @@ using namespace std;
 
 class Point{
 private:
-    int slot;
+    unsigned long slot;
     float price;
     time_t date;
     time_t startDate;
@@ -43,7 +43,21 @@ public:
         return timeinfo;
     }
 
+    static time_t slotToDate(time_t startDate, unsigned long slot){
+        struct std::tm * ptm = std::localtime(&tt);
+        ptm->tm_mday += slot;
+        return mktime(tm);
+    }
+
     Point(){}
+
+    Point(string startDate, unsigned long slot, float price){
+        this->startDate = strToDate(startDate);
+        this->date = slotToDate(this->startDate, slot);
+        this->price = price;
+        this->slot = slot;
+        this->n = 1;
+    }
 
     Point(queue<string> que, string startDate){
         this->date = strToDate(que.front());
@@ -74,7 +88,7 @@ public:
     void setSlot(int dt){
         struct tm * date = timeToTm(this->date);
         struct tm * startDate = timeToTm(this->startDate);
-        int slot = ((date->tm_year - startDate->tm_year)*12 + (date->tm_mon - startDate->tm_mon)) / dt;
+        unsigned long slot = ((date->tm_year - startDate->tm_year)*12 + (date->tm_mon - startDate->tm_mon)) / dt;
         this->slot = slot;
     }
 

@@ -78,15 +78,15 @@ public:
         }
     }
 
-    static void feed(RealEstate re){
-        re.addTuple(tup);
+    static void feed(RealEstate *re){
+        re->add(tup);
     }
 
     void feedBunch(){
         thread t[this->num_threads];
         while(getTup()){
             for(int i = 0; i < num_threads ; i++){
-                t[i] = thread(feed, re[i]);
+                t[i] = thread(feed, &(re[i]));
             }
             for(int i = 0; i < num_threads ; i++){
                 t[i].join();
@@ -95,8 +95,8 @@ public:
     }
 
     void start(){
-        for(auto i : bbls){
-            cout<<i<<endl;
+        for(auto i : re){
+            i.interpol();
         }
     }
 };

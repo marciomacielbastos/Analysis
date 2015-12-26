@@ -10,7 +10,7 @@ class RealEstate{
 protected:
     long inf;
     long sup;
-    map<int,Unit> units;
+    map<long,Unit> units;
 
 public:
     RealEstate(long inf, long sup){
@@ -26,11 +26,11 @@ public:
         }
     }
 
-    void addTuple(queue<string> tup){
+    void add(queue<string> tup){
         long bbl = atol(tup.front().c_str());
         tup.pop();
         if (canBeAdd(bbl)){
-            map<int,Unit>::iterator it;
+            map<long,Unit>::iterator it;
             it = this->units.find(bbl);
             if (it!= this->units.end()){
                 it->second.add(tup);
@@ -40,6 +40,12 @@ public:
             }
         } else {
             return;
+        }
+    }
+
+    void interpol(){
+        for(auto i: units){
+            (i.second).interpol();
         }
     }
 };
