@@ -3,6 +3,7 @@
 #include <map>
 #include <point.h>
 #include <queue>
+#include <interpol.h>
 using namespace std;
 
 
@@ -30,9 +31,11 @@ public:
     }
 
     void interpol(){
-        for(map<unsigned long, Point>::iterator it = timeSeries.begin(); it != timeSeries.end(); it++){
+//        for(map<unsigned long, Point>::iterator it = timeSeries.begin(); it != timeSeries.end(); it++){
 
-        }
+//        }
+        Interpol i(&timeSeries);
+        i.calcHlist();
     }
 };
 

@@ -7,6 +7,8 @@
 #include <queue>
 #include <realestate.h>
 #include <kernel.h>
+#include <spline.h>
+
 using namespace std;
 //int argc, char *argv[]
 int main(){
@@ -18,6 +20,7 @@ int main(){
 //    bbls = argv[0];
 //    input = argv[1];
 //    output = argv[2];
+    Spline(2);
 
     Kernel k("/home/marcio/Marcio/RealEstateFiles/bbls.csv", "/home/marcio/Marcio/RealEstateFiles/aip.csv", "/home/marcio/Marcio/RealEstateFiles/t.csv", 3);
     k.feedBunch();

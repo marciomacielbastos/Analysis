@@ -17,4 +17,7 @@ HEADERS += \
     subunit.h \
     point.h \
     unit.h \
-    realestate.h
+    realestate.h \
+    interpol.h \
+    interpolchain.h \
+    spline.h

@@ -25,7 +25,7 @@ public:
     }
 
     static string dateToStr(time_t tt){
-        struct std::tm * ptm = std::localtime(&tt);
+        struct std::tm * ptm = timeToTm(tt);
         string day = std::to_string(ptm->tm_mday);
         string month = std::to_string(ptm->tm_mon+1);
         string year = std::to_string(ptm->tm_year+1900);
@@ -44,9 +44,9 @@ public:
     }
 
     static time_t slotToDate(time_t startDate, unsigned long slot){
-        struct std::tm * ptm = std::localtime(&tt);
+        struct std::tm * ptm = timeToTm(startDate);
         ptm->tm_mday += slot;
-        return mktime(tm);
+        return mktime(ptm);
     }
 
     Point(){}
