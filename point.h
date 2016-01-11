@@ -4,6 +4,7 @@
 #include <ctime>        // std::time_t, struct std::tm, std::localtime
 #include <chrono>       // std::chrono::system_clock
 #include <queue>
+#include <iostream>
 using namespace std;
 
 class Point{
@@ -12,7 +13,7 @@ private:
     float price;
     time_t date;
     time_t startDate;
-    int dt;
+    unsigned long dt;
     int n;
 
 public:
@@ -85,7 +86,7 @@ public:
         this->n = n;
     }
 
-    void setSlot(int dt){
+    void setSlot(long dt){
         struct tm * date = timeToTm(this->date);
         struct tm * startDate = timeToTm(this->startDate);
         unsigned long slot = ((date->tm_year - startDate->tm_year)*12 + (date->tm_mon - startDate->tm_mon)) / dt;
@@ -105,7 +106,7 @@ public:
         return difference;
     }
 
-    void setDt(int dt){
+    void setDt(long dt){
         this->dt = dt;
     }
 

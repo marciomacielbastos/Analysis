@@ -5,40 +5,40 @@
 
 class InterpolChain{
 
-protected:
+//protected:
 
-    int id_chain;
-    InterpolChain * next;
+//    int id_chain;
+//    InterpolChain * next;
 
-public:
+//public:
 
-    virtual bool canInterpol(int id);
+//    virtual bool canInterpol(int id);
 
-    InterpolChain(int id){
-        this->next = nullptr;
-        this->id_chain = id;
-    }
+//    InterpolChain(int id){
+//        this->next = nullptr;
+//        this->id_chain = id;
+//    }
 
-    void setNext(InterpolChain * frame) {
-        if (next == nullptr) {
-            next = frame;
-        } else {
-            next->setNext(frame);
-        }
-    }
+//    void setNext(InterpolChain * frame) {
+//        if (next == nullptr) {
+//            next = frame;
+//        } else {
+//            next->setNext(frame);
+//        }
+//    }
 
-    //Falta colocar as excessões!
-    void interpol(int id){
-        if (canInterpol(id)) {
-            interpolate();
-        } else {
-            if (next == nullptr) {
-                return;
-            }
-            next->interpol(id);
-        }
-    }
-    virtual void interpolate();
+//    //Falta colocar as excessões!
+//    void interpol(int id){
+//        if (canInterpol(id)) {
+//            interpolate();
+//        } else {
+//            if (next == nullptr) {
+//                return;
+//            }
+//            next->interpol(id);
+//        }
+//    }
+//    virtual void interpolate();
 };
 
 #endif // INTERPOLCHAIN_H

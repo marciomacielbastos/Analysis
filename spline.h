@@ -5,9 +5,9 @@
 
 class Spline: public InterpolChain{
 
-public:
-    Spline(int id) : InterpolChain(id){
-    }
+//public:
+//    Spline(int id) : InterpolChain(id){
+//    }
 
 };
 

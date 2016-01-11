@@ -19,7 +19,7 @@ public:
     }
 
     bool canBeAdd(long bbl){
-        if(inf <= bbl && bbl <= sup){
+        if(this->inf <= bbl && bbl <= this->sup){
             return true;
         } else {
             return false;
@@ -35,8 +35,25 @@ public:
             if (it!= this->units.end()){
                 it->second.add(tup);
             } else {
-                units[bbl] = Unit();
-                units[bbl].add(tup);
+                this->units[bbl] = Unit();
+                this->units[bbl].add(tup);
+            }
+        } else {
+            return;
+        }
+    }
+
+    void addPt(queue<string> tup){
+        long bbl = atol(tup.front().c_str());
+        tup.pop();
+        if (canBeAdd(bbl)){
+            map<long,Unit>::iterator it;
+            it = this->units.find(bbl);
+            if (it!= this->units.end()){
+                it->second.addPoint(tup);
+            } else {
+                this->units[bbl] = Unit();
+                this->units[bbl].addPoint(tup);
             }
         } else {
             return;
@@ -44,7 +61,7 @@ public:
     }
 
     void interpol(){
-        for(auto i: units){
+        for(auto i: this->units){
             (i.second).interpol();
         }
     }
