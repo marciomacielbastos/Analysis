@@ -5,6 +5,7 @@
 #include <thread>
 #include <realestate.h>
 #include <csvmanager.h>
+#include <iostream>
 using namespace std;
 
 queue<string> tup;
@@ -99,6 +100,7 @@ public:
     }
 
     void feedBunch(bool k){
+        cout<<k<<endl;
         thread t[this->num_threads];
         while(getTup()){
             for(int i = 0; i < this->num_threads ; i++){

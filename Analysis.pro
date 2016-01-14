@@ -20,4 +20,5 @@ HEADERS += \
     realestate.h \
     interpol.h \
     interpolchain.h \
-    spline.h
+    spline.h \
+    matrix.h

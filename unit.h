@@ -35,7 +35,6 @@ public:
 
     void addPoint(queue<string> p){
         Point pto(p, startDate);
-        pto.setDt(0);
         map<unsigned long,Point>::iterator it;
         it = this->timeSeries.find(pto.getSlot());
         if (it!= this->timeSeries.end()){

@@ -60,6 +60,7 @@ public:
     }
 
     queue<string> read(bool b){
+        if(b){}
         string line;
         if ( file.good() ){
              getline ( file, line,'\n');

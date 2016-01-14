@@ -19,7 +19,8 @@ public:
     }
 
     bool canBeAdd(long bbl){
-        if(this->inf <= bbl && bbl <= this->sup){
+        //remind to put a extra row 00000000 in the bbl
+        if(this->inf < bbl && bbl <= this->sup){
             return true;
         } else {
             return false;
