@@ -18,17 +18,43 @@ private:
     vector<RealEstate> re;
     int num_threads;
     CSVManager cs;
+    bool key;
 
 public:
     Kernel(string bblslist, string input, string output, int n){
         this->cs = CSVManager(input);
         this->output = output;
         this->num_threads =n;
+        this->key = false;
         this->bbl_area = loadBBLS(bblslist);
         shareBBLs();
     }
 
+    Kernel(string bblslist, string input, string output, int n, bool key){
+        this->cs = CSVManager(input);
+        this->output = output;
+        this->num_threads =n;
+        this->key = key;
+        this->bbl_area = loadBBLS(bblslist);
+        shareBBLs();
+    }
+
+    void setStartDate(string startDate){
+        RealEstate::setStartDate(startDate);
+    }
+
+    void setDt(unsigned long dt){
+        RealEstate::setDt(dt);
+    }
+
+    void setBblArea(){
+        if(this->key){
+            this->bbls.push_back(0);
+        }
+    }
+
     map<long, float> loadBBLS(string bblslist){
+        setBblArea();
         map<long, float> bbl_area;
         long bbl;
         float area;
@@ -63,7 +89,8 @@ public:
             }
             b = this->bbls[begin];
             e = this->bbls[end];
-            this->re.push_back(RealEstate(b, e));
+            RealEstate re = RealEstate(b, e);
+            this->re.push_back(re);
         }
         //Empty this->bbls, since it will be not used anymore
         vector<long>().swap(this->bbls);
@@ -99,8 +126,7 @@ public:
        }
     }
 
-    void feedBunch(bool k){
-        cout<<k<<endl;
+    void feedBunchPt(){
         thread t[this->num_threads];
         while(getTup()){
             for(int i = 0; i < this->num_threads ; i++){

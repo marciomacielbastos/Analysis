@@ -3,7 +3,14 @@
 #include <unit.h>
 #include <queue>
 #include <map>
+#include <point.h>
+#include <ctime>
+
 using namespace std;
+
+unsigned long Point::dt = 0;
+time_t Point::startDate = Point::strToTime("1980-01-01");
+
 
 class RealEstate{
 
@@ -18,6 +25,14 @@ public:
         this->sup = sup;
     }
 
+    static void setDt(unsigned long dt){
+        Point::setDt(dt);
+    }
+
+    static void setStartDate(string startDate){
+        Point::setStartDate(startDate);
+    }
+
     bool canBeAdd(long bbl){
         //remind to put a extra row 00000000 in the bbl
         if(this->inf < bbl && bbl <= this->sup){
@@ -27,7 +42,7 @@ public:
         }
     }
 
-    void add(queue<string> tup){
+    bool add(queue<string> tup){
         long bbl = atol(tup.front().c_str());
         tup.pop();
         if (canBeAdd(bbl)){
@@ -39,8 +54,9 @@ public:
                 this->units[bbl] = Unit();
                 this->units[bbl].add(tup);
             }
+            return true;
         } else {
-            return;
+            return false;
         }
     }
 
@@ -51,10 +67,10 @@ public:
             map<long,Unit>::iterator it;
             it = this->units.find(bbl);
             if (it!= this->units.end()){
-                it->second.addPoint(tup);
+                this->units[bbl].addPt(tup);
             } else {
                 this->units[bbl] = Unit();
-                this->units[bbl].addPoint(tup);
+                this->units[bbl].addPt(tup);
             }
         } else {
             return;

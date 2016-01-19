@@ -87,7 +87,7 @@ private:
 
 
 
-    void pivot(int i, Matrix *inv,Matrix *mat){
+    int pivot(int i, Matrix *inv,Matrix *mat){
         try{
             float c=mat->getMatrix()[i][i];
             float aux;
@@ -108,9 +108,11 @@ private:
                     inv->setMatrix(l,j,aux);
                 }
             }
+            return l;
         }
         catch(exception e){
             cerr<<e.what()<<endl;
+            return -1;
         }
     }
 public:
@@ -393,6 +395,59 @@ public:
             return Matrix();
         }
     }
+    
+    static Matrix I(int rows, int cols){
+        Matrix inv=Matrix(rows,cols);
+        for(int i=0;i<rows;i++){
+            inv.setMatrix(i,i,1);
+        }
+        return inv;
+    }
+    
+    static Matrix copy(Matrix mat){
+        
+    }
+    
+//    Matrix gauss_jordan(){
+//        try{
+//                if(rows!=cols-1||this->D==0){
+//                    throw myex;
+//                }
+//                float p;
+                
+//                Matrix mat=Matrix(rows,cols);
+//                for(int i=0;i<rows;i++){
+//                    for(int j=0;j<cols-1;j++){
+//                        mat.setMatrix(i,j,this->getMatrix()[i][j]);
+//                    }
+//                }
+//                for(int i=0;i<rows;i++){
+//                    pivot(i,&inv,&mat);
+//                    p=mat.getMatrix()[i][i];
+//                    if(p){
+//                        for(int j=0;j<rows;j++){
+//                            mat.setMatrix(i,j,(mat.getMatrix()[i][j]/(float)p));
+//                            inv.setMatrix(i,j,(inv.getMatrix()[i][j]/(float)p));
+//                        }
+//                        for(int k=0;k<rows;k++){
+//                            if(k!=i){
+//                                p=mat.getMatrix()[k][i];
+//                                for(int j=0;j<rows;j++){
+//                                    mat.setMatrix(k,j,(mat.getMatrix()[k][j]-p*mat.getMatrix()[i][j]));
+//                                    inv.setMatrix(k,j,(inv.getMatrix()[k][j]-p*inv.getMatrix()[i][j]));
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+
+//                return inv;
+//        }
+//        catch(exception e){
+//            cerr<<e.what()<<endl;
+//            return Matrix();
+//        }
+//    }
 };
 
 #endif // MATRIX_H

@@ -10,15 +10,8 @@ class Unit
 private:
     map<string,SubUnit> subunits;
     map<unsigned long,Point> timeSeries;
-    string startDate;
 public:
-    Unit(){
-        this->startDate = "1980-01-01";
-    }
-
-    void setStartDate(string startDate){
-        this->startDate = startDate;
-    }
+    Unit(){}
 
     void add(queue<string> su){
         string su_id = su.front();
@@ -28,20 +21,39 @@ public:
         if (it!= this->subunits.end()){
             it->second.add(su);
         } else {
-            subunits[su_id] = SubUnit(startDate);
+            subunits[su_id] = SubUnit();
             subunits[su_id].add(su);
         }
     }
 
-    void addPoint(queue<string> p){
-        Point pto(p, startDate);
+    void addPt(queue<string> p){
+        Point pt(p);
         map<unsigned long,Point>::iterator it;
-        it = this->timeSeries.find(pto.getSlot());
+        it = this->timeSeries.find(pt.getSlot());
         if (it!= this->timeSeries.end()){
-            timeSeries[it->first] = it->second + pto;
+            timeSeries[it->first] = it->second + pt;
         } else {
-            this->timeSeries[pto.getSlot()] = pto;
+            this->timeSeries[pt.getSlot()] = pt;
         }
+    }
+
+    string getUnitSeries(string endDate){
+        map<unsigned long,Point>::iterator it = this->timeSeries.begin();
+        unsigned long dt = it->second.getDt();
+        for(it; it!=this->timeSeries.end();it++){
+
+        }
+        return "";
+    }
+
+    string getTimeSeries(string endDate){
+        string scope;
+        if(this->subunits.size()){
+            scope = "";
+        } else if (this->timeSeries.size()) {
+               scope = getUnitSeries(endDate);
+        }
+        return scope;
     }
 
     void interpol(){

@@ -10,17 +10,11 @@ using namespace std;
 class SubUnit{
 private:
     map<unsigned long,Point> timeSeries;
-    string startDate;
 public:
-    SubUnit(){
-        this->startDate = "1980-01-01";
-    }
+    SubUnit(){}
 
-    SubUnit(string startDate){
-        this->startDate = startDate;
-    }
     void add(queue<string> p){
-        Point pto(p, startDate);
+        Point pto(p);
         map<unsigned long,Point>::iterator it;
         it = this->timeSeries.find(pto.getSlot());
         if (it!= this->timeSeries.end()){

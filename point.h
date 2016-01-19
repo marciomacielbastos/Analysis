@@ -12,24 +12,32 @@ private:
     unsigned long slot;
     float price;
     time_t date;
-    time_t startDate;
-    unsigned long dt;
+    static time_t startDate;
+    static unsigned long dt;
     int n;
 
 public:
-    static time_t strToDate(string date){
-        std::tm tm = {};
-        stringstream ss(date);
-        ss >> get_time(&tm, "%Y-%m-%d");
+    static time_t strToTime(string date){
+        std::tm tm = strToTm(date);
         time_t tt = mktime(&tm);
         return tt;
     }
 
-    static string dateToStr(time_t tt){
+    static std::tm strToTm(string date){
+        std::tm tm = {};
+        stringstream ss(date);
+        ss >> get_time(&tm, "%Y-%m-%d");
+        return tm;
+    }
+
+    static string timeToStr(time_t tt){
         struct std::tm * ptm = timeToTm(tt);
         string day = std::to_string(ptm->tm_mday);
         string month = std::to_string(ptm->tm_mon+1);
         string year = std::to_string(ptm->tm_year+1900);
+        if(ptm->tm_mday < 9){
+            day = "0"+day;
+        }
         if(ptm->tm_mon < 9){
             month = "0"+month;
         }
@@ -39,65 +47,84 @@ public:
 
     static struct tm* timeToTm(time_t tt){
         struct tm * timeinfo;
-        time ( &tt );
         timeinfo = localtime ( &tt );
         return timeinfo;
     }
 
-    static time_t slotToDate(time_t startDate, unsigned long slot){
-        struct std::tm * ptm = timeToTm(startDate);
+    static time_t slotToTime(unsigned long slot){
+        struct std::tm * ptm = timeToTm(Point::startDate);
         ptm->tm_mday += slot;
         return mktime(ptm);
     }
 
+    static unsigned long getSlot(string dt){
+        struct std::tm date = strToTm(dt);
+        struct std::tm * startDate = timeToTm(getStartDate());
+        unsigned long slot = ((date.tm_year - startDate->tm_year)*12 + (date.tm_mon - startDate->tm_mon)) / getDt();
+        return slot;
+    }
+
+    static void setStartDate(string startDate){
+        Point::startDate = strToTime(startDate);
+    }
+
+    static time_t getStartDate(){
+        return Point::startDate;
+    }
+
+    static void setDt(unsigned long dt){
+        Point::dt = dt;
+    }
+
+    static unsigned long getDt(){
+        return Point::dt;
+    }
+
     Point(){}
 
-    Point(string startDate, unsigned long slot, float price){
-        this->startDate = strToDate(startDate);
-        this->date = slotToDate(this->startDate, slot);
+    Point(unsigned long slot, float price){
+        this->date = slotToTime(slot);
         this->price = price;
         this->slot = slot;
         this->n = 1;
     }
 
-    Point(queue<string> que, string startDate){
-        this->date = strToDate(que.front());
+    Point(queue<string> que){
+        this->date = strToTime(que.front());
         que.pop();
         this->price = atof(que.front().c_str());
         que.pop();
-        this->startDate = strToDate(startDate);
-        this->slot = setSlot();
+        this->slot = setSlot((getDt()>0));
         this->n = 1;
     }
 
-    Point(string startDate, string date, string price){
-        this->date = strToDate(date);
+    Point(string date, string price){
+        this->date = strToTime(date);
         this->price = atof(price.c_str());
-        this->startDate = strToDate(startDate);
-        this->slot = setSlot();
+        this->slot = setSlot((getDt()>0));
         this->n = 1;
     }
 
-    Point(time_t startDate, time_t date, float price, int n){
+    Point(time_t date, float price, unsigned long slot, int n){
         this->date = date;
         this->price = price;
-        this->startDate = startDate;
-        this->slot = setSlot();
+        this->slot = slot;
         this->n = n;
     }
 
-    void setSlot(long dt){
-        struct tm * date = timeToTm(this->date);
-        struct tm * startDate = timeToTm(this->startDate);
-        unsigned long slot = ((date->tm_year - startDate->tm_year)*12 + (date->tm_mon - startDate->tm_mon)) / dt;
-        this->slot = slot;
+    unsigned long setSlot(bool key){
+        if(key){
+            struct std::tm * startDate = timeToTm(this->date);
+            struct std::tm date = *startDate;
+            startDate = timeToTm(getStartDate());
+            unsigned long slot = ((date.tm_year - startDate->tm_year)*12 + (date.tm_mon - startDate->tm_mon)) / getDt();
+            return slot;
+        } else {
+            return difference(getStartDate(), this->date);
+        }
     }
 
-    int setSlot(){
-        return difference(this->startDate, this->date);
-    }
-
-    int getSlot(){
+    unsigned long getSlot(){
         return slot;
     }
 
@@ -106,9 +133,7 @@ public:
         return difference;
     }
 
-    void setDt(long dt){
-        this->dt = dt;
-    }
+
 
     float getPrice(){
         return price;
@@ -118,7 +143,7 @@ public:
         float num = this->price*(this->n) + pto.getPrice();
         this->n++;
         float price = (num)/(float)(this->n);
-        Point p(startDate, date, price, n);
+        Point p(this->date, price, this->slot, n);
         return p;
     }
 
