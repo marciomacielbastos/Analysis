@@ -4,12 +4,13 @@
 #include <map>
 #include <queue>
 #include <point.h>
+#include <spline.h>
 
 class Unit
 {
 private:
     map<string,SubUnit> subunits;
-    map<unsigned long,Point> timeSeries;
+    map<long,Point> timeSeries;
 public:
     Unit(){}
 
@@ -28,7 +29,7 @@ public:
 
     void addPt(queue<string> p){
         Point pt(p);
-        map<unsigned long,Point>::iterator it;
+        map<long,Point>::iterator it;
         it = this->timeSeries.find(pt.getSlot());
         if (it!= this->timeSeries.end()){
             timeSeries[it->first] = it->second + pt;
@@ -38,8 +39,9 @@ public:
     }
 
     string getUnitSeries(string endDate){
-        map<unsigned long,Point>::iterator it = this->timeSeries.begin();
-        unsigned long dt = it->second.getDt();
+        long dt = Point::getDt();
+        long endSlot = Point::getSlot(endDate);
+        map<long,Point>::iterator it = this->timeSeries.begin();
         for(it; it!=this->timeSeries.end();it++){
 
         }
@@ -57,9 +59,11 @@ public:
     }
 
     void interpol(){
-        for(map<string, SubUnit>::iterator it = subunits.begin(); it != subunits.end(); it++){
-            (it->second).interpol();
-        }
+//        for(map<string, SubUnit>::iterator it = subunits.begin(); it != subunits.end(); it++){
+//            (it->second).interpol();
+//        }
+        Spline s;
+        s.interpol((this->timeSeries));
     }
 };
 

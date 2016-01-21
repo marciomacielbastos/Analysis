@@ -9,11 +9,11 @@ using namespace std;
 
 class Point{
 private:
-    unsigned long slot;
+    long slot;
     float price;
     time_t date;
     static time_t startDate;
-    static unsigned long dt;
+    static long dt;
     int n;
 
 public:
@@ -51,16 +51,16 @@ public:
         return timeinfo;
     }
 
-    static time_t slotToTime(unsigned long slot){
+    static time_t slotToTime(long slot){
         struct std::tm * ptm = timeToTm(Point::startDate);
         ptm->tm_mday += slot;
         return mktime(ptm);
     }
 
-    static unsigned long getSlot(string dt){
-        struct std::tm date = strToTm(dt);
+    static long getSlot(string date){
+        struct std::tm date_ = strToTm(date);
         struct std::tm * startDate = timeToTm(getStartDate());
-        unsigned long slot = ((date.tm_year - startDate->tm_year)*12 + (date.tm_mon - startDate->tm_mon)) / getDt();
+        long slot = ((date_.tm_year - startDate->tm_year)*12 + (date_.tm_mon - startDate->tm_mon)) / getDt();
         return slot;
     }
 
@@ -72,17 +72,17 @@ public:
         return Point::startDate;
     }
 
-    static void setDt(unsigned long dt){
+    static void setDt(long dt){
         Point::dt = dt;
     }
 
-    static unsigned long getDt(){
+    static long getDt(){
         return Point::dt;
     }
 
     Point(){}
 
-    Point(unsigned long slot, float price){
+    Point(long slot, float price){
         this->date = slotToTime(slot);
         this->price = price;
         this->slot = slot;
@@ -105,26 +105,26 @@ public:
         this->n = 1;
     }
 
-    Point(time_t date, float price, unsigned long slot, int n){
+    Point(time_t date, float price, long slot, int n){
         this->date = date;
         this->price = price;
         this->slot = slot;
         this->n = n;
     }
 
-    unsigned long setSlot(bool key){
+    long setSlot(bool key){
         if(key){
             struct std::tm * startDate = timeToTm(this->date);
             struct std::tm date = *startDate;
             startDate = timeToTm(getStartDate());
-            unsigned long slot = ((date.tm_year - startDate->tm_year)*12 + (date.tm_mon - startDate->tm_mon)) / getDt();
+            long slot = ((date.tm_year - startDate->tm_year)*12 + (date.tm_mon - startDate->tm_mon)) / getDt();
             return slot;
         } else {
             return difference(getStartDate(), this->date);
         }
     }
 
-    unsigned long getSlot(){
+    long getSlot(){
         return slot;
     }
 

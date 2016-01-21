@@ -43,7 +43,7 @@ public:
         RealEstate::setStartDate(startDate);
     }
 
-    void setDt(unsigned long dt){
+    void setDt(long dt){
         RealEstate::setDt(dt);
     }
 
@@ -75,7 +75,7 @@ public:
     void shareBBLs(){
         long offset = this->bbls.size() % this->num_threads;
         long len = this->bbls.size() / this->num_threads;
-        unsigned long begin = 0, end = 0;
+        long begin = 0, end = 0;
         long b, e;
         while(end < this->bbls.size()-1){
             begin = end;

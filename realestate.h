@@ -8,7 +8,7 @@
 
 using namespace std;
 
-unsigned long Point::dt = 0;
+long Point::dt = 0;
 time_t Point::startDate = Point::strToTime("1980-01-01");
 
 
@@ -25,7 +25,7 @@ public:
         this->sup = sup;
     }
 
-    static void setDt(unsigned long dt){
+    static void setDt(long dt){
         Point::setDt(dt);
     }
 

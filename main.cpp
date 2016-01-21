@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <csvmanager.h>
 #include <iomanip>      // std::put_time
@@ -9,6 +10,7 @@
 #include <kernel.h>
 #include <spline.h>
 #include <matrix.h>
+#include <cmath>
 
 using namespace std;
 //int argc, char *argv[]
@@ -27,7 +29,6 @@ int main(){
     k.setStartDate("2002-01-01");
     k.setDt(6);
     k.feedBunchPt();
-
     k.start();
 //    float **matrix;
 //    matrix =new (nothrow) float*[3];

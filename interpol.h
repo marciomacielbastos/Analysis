@@ -6,10 +6,10 @@ using namespace std;
 
 
 class Interpol
-{   map<unsigned long,Point> * timeSeries;
+{   map<long,Point> * timeSeries;
 
 public:
-    Interpol(map<unsigned long,Point> * timeSeries){
+    Interpol(map<long,Point> * timeSeries){
         this->timeSeries = timeSeries;
     }
 
