@@ -75,7 +75,7 @@ public:
     void shareBBLs(){
         long offset = this->bbls.size() % this->num_threads;
         long len = this->bbls.size() / this->num_threads;
-        long begin = 0, end = 0;
+        unsigned long begin = 0, end = 0;
         long b, e;
         while(end < this->bbls.size()-1){
             begin = end;

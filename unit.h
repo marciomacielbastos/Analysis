@@ -38,32 +38,12 @@ public:
         }
     }
 
-    string getUnitSeries(string endDate){
-        long dt = Point::getDt();
-        long endSlot = Point::getSlot(endDate);
-        map<long,Point>::iterator it = this->timeSeries.begin();
-        for(it; it!=this->timeSeries.end();it++){
-
-        }
-        return "";
-    }
-
-    string getTimeSeries(string endDate){
-        string scope;
-        if(this->subunits.size()){
-            scope = "";
-        } else if (this->timeSeries.size()) {
-               scope = getUnitSeries(endDate);
-        }
-        return scope;
-    }
-
     void interpol(){
 //        for(map<string, SubUnit>::iterator it = subunits.begin(); it != subunits.end(); it++){
 //            (it->second).interpol();
 //        }
         Spline s;
-        s.interpol((this->timeSeries));
+        s.load((this->timeSeries));
     }
 };
 

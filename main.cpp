@@ -5,7 +5,7 @@
 #include <ctime>        // std::time_t, struct std::tm, std::localtime
 #include <chrono>
 #include <point.h>
-#include <queue>
+#include <vector>
 #include <realestate.h>
 #include <kernel.h>
 #include <spline.h>
@@ -25,11 +25,26 @@ int main(){
 //    output = argv[2];
 //    Spline(2);
 
-    Kernel k("/tmp/bl(sample).csv", "/tmp/bdv(sample).csv", "/home/marcio/Marcio/RealEstateFiles/teste.csv", 2, true);
-    k.setStartDate("2002-01-01");
-    k.setDt(6);
-    k.feedBunchPt();
-    k.start();
+//    Kernel k("/tmp/teste2.csv", "/tmp/teste.csv", "/home/marcio/Marcio/RealEstateFiles/teste.csv", 1, true);
+//    k.setStartDate("2001-01-01");
+//    k.setDt(6);
+//    k.feedBunchPt();
+//    k.start();
+    vector<long> x;
+    x.push_back(0);
+    x.push_back(1);
+    x.push_back(2);
+    x.push_back(3);
+    vector<float> y;
+    y.push_back(0);
+    y.push_back(2);
+    y.push_back(1);
+    y.push_back(0);
+    Spline s;
+    s.load(x, y);
+    float k = s.interpol(1.75);
+    cout<<k<<endl;
+
 //    float **matrix;
 //    matrix =new (nothrow) float*[3];
 //    for(int i=0;i<3;i++){

@@ -404,10 +404,6 @@ public:
         return inv;
     }
     
-    static Matrix copy(Matrix mat){
-        
-    }
-    
 //    Matrix gauss_jordan(){
 //        try{
 //                if(rows!=cols-1||this->D==0){
