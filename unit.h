@@ -62,6 +62,9 @@ public:
 //        }
         Spline s;
         s.load((this->timeSeries));
+        float c = 1.5;
+        c = s.interpol(c);
+        c = 0;
     }
 };
 

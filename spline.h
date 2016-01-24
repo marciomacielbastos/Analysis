@@ -151,9 +151,8 @@ public:
    }
 
    float interpol(float x){
-
        for(unsigned long i = 0; i < this->Xs.size() ; i++){
-           if(x == Xs[i]){
+           if(x == (float)Xs[i]){
                return this->Y[i];
            }
        }
@@ -163,6 +162,7 @@ public:
        float P2 = A[2]*(float)(x-this->Xs[i])*(float)(x-this->Xs[i]);
        float P1 = A[1]*(float)(x-this->Xs[i]);
        float P0 = A[0];
+       delete A;
        return P3 + P2 + P1 + P0;
    }
 };
