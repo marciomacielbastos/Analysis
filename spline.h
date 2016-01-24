@@ -85,7 +85,6 @@ public:
    }
 
    float c_(long i){
-       float _c_;
        if(i == 0){
            return c(i)/(float)b(i);
        } else {
@@ -164,6 +163,10 @@ public:
        float P0 = A[0];
        delete A;
        return P3 + P2 + P1 + P0;
+   }
+
+   vector<long> * getXs(){
+       return &(this->Xs);
    }
 };
 

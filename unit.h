@@ -23,12 +23,15 @@
 #include <queue>
 #include <point.h>
 #include <spline.h>
+#include <sstream>
 
 class Unit
 {
 private:
     map<string,SubUnit> subunits;
     map<long,Point> timeSeries;
+    Spline s;
+
 public:
     Unit(){}
 
@@ -56,15 +59,34 @@ public:
         }
     }
 
-    void interpol(){
-//        for(map<string, SubUnit>::iterator it = subunits.begin(); it != subunits.end(); it++){
-//            (it->second).interpol();
-//        }
-        Spline s;
-        s.load((this->timeSeries));
-        float c = 1.5;
-        c = s.interpol(c);
-        c = 0;
+//    void interpol(){
+////        for(map<string, SubUnit>::iterator it = subunits.begin(); it != subunits.end(); it++){
+////            (it->second).interpol();
+////        }
+//        this->s.load((this->timeSeries));
+//        float c = 1.5;
+//        c = this->s.interpol(c);
+//        c = 0;
+//    }
+
+    string interpol(){
+        this->s.load((this->timeSeries));
+        string series = "[";
+        string temp_;
+        stringstream ss (stringstream::in | stringstream::out);
+        vector<long> * temp = this->s.getXs();
+        long firstX = (*temp)[0];
+        long lastX = Point::getSlot("2015-01-01");
+        for(;firstX <= lastX ; firstX++){
+            ss << s.interpol(firstX);
+            if(firstX != lastX){
+                ss >> temp_;
+                series += (temp_+",");
+            } else {
+               series += (ss.str()+"]");
+            }
+        }
+        return series;
     }
 };
 

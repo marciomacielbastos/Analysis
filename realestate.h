@@ -97,7 +97,8 @@ public:
 
     void interpol(){
         for(auto i: this->units){
-            (i.second).interpol();
+           string k = (i.second).interpol();
+           k = "";
         }
     }
 };
