@@ -18,15 +18,14 @@
 
 #ifndef UNIT_H
 #define UNIT_H
-#include </home/marcio/Marcio/Analysis/Analysis/subunit.h>
+#include <subunit.h>
 #include <map>
 #include <queue>
-#include </home/marcio/Marcio/Analysis/Analysis/point.h>
-#include </home/marcio/Marcio/Analysis/Analysis/spline.h>
+#include <point.h>
+#include <spline.h>
 #include <sstream>
 
-class Unit
-{
+class Unit{
 private:
     map<string,SubUnit> subunits;
     map<long,Point> timeSeries;

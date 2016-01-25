@@ -18,10 +18,10 @@
 
 #ifndef REALESTATE_H
 #define REALESTATE_H
-#include </home/marcio/Marcio/Analysis/Analysis/unit.h>
+#include <unit.h>
 #include <queue>
 #include <map>
-#include </home/marcio/Marcio/Analysis/Analysis/point.h>
+#include <point.h>
 #include <ctime>
 #include <vector>
 

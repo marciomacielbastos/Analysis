@@ -21,8 +21,8 @@
 #include <vector>
 #include <queue>
 #include <thread>
-#include </home/marcio/Marcio/Analysis/Analysis/realestate.h>
-#include </home/marcio/Marcio/Analysis/Analysis/csvmanager.h>
+#include <realestate.h>
+#include <csvmanager.h>
 #include <iostream>
 using namespace std;
 

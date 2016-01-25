@@ -19,16 +19,18 @@
 #ifndef SPLINE_H
 #define SPLINE_H
 #include <map>
-#include </home/marcio/Marcio/Analysis/Analysis/point.h>
+#include <point.h>
 #include <cmath>
 #include <vector>
 #include <queue>
+using namespace std;
+
 
 class Spline{
 private:
     vector<long> Xs;
     vector<float> Y;
-    vector<float> Yp;
+    vector<float> Y_modified;
 
     vector<long> setXs(map<long,Point> timeSeries){
         map<long,Point>::iterator it = timeSeries.begin();
@@ -51,7 +53,7 @@ private:
 
     vector<float> setYp(){
         vector<float> Yp;
-        for(auto  i : this->Xs){
+        for(unsigned long i = 0; i < this->Xs.size(); i++){
             Yp.push_back(0);
         }
         return Yp;
@@ -60,17 +62,8 @@ private:
 public:
    Spline(){}
 
-
-
    long h(long i){
-       long h_ = this->Xs[i+1]-this->Xs[i];
-       if(h_==0){
-           "teste";
-           cout<<i<<endl;
-       } else {
-           "mozo";
-       }
-       return h_;
+       return this->Xs[i+1]-this->Xs[i];
    }
 
    long dy(long i){
@@ -117,25 +110,24 @@ public:
    }
 
    void solveTridiagonal(){
-       this->Yp[this->Xs.size()-2] = d_(this->Xs.size()-2);
+       this->Y_modified[this->Xs.size()-2] = d_(this->Xs.size()-2);
        for(unsigned long i = this->Xs.size()-3; i > 0; i--){
-            this->Yp[i] = d_(i) - c_(i)*this->Yp[i+1];
+            this->Y_modified[i] = d_(i) - c_(i)*this->Y_modified[i+1];
        }
    }
 
    void load(map<long,Point> timeSeries){
        this->Xs = setXs(timeSeries);
        this->Y = setYs(timeSeries);
-       this->Yp = setYp();
+       this->Y_modified = setYp();
        solveTridiagonal();
    }
 
-  bool load(vector<long> x, vector<float> y){
+  void load(vector<long> x, vector<float> y){
        this->Xs = x;
        this->Y = y;
-       this->Yp = setYp();
+       this->Y_modified = setYp();
        solveTridiagonal();
-       return true;
    }
 
    long getInterval(float x){
@@ -150,10 +142,20 @@ public:
    float* f(long k){
        float* A = new float[4];
        A[0] = this->Y[k];
-       A[1] = r(k)-(h(k)/float(6))*(this->Yp[k+1]+2*this->Yp[k]);
-       A[2] = this->Yp[k]/(float)2;
-       A[3] = (1/(float)(6*h(k)))*(this->Yp[k+1]-this->Yp[k]);
+       A[1] = r(k)-(h(k)/float(6))*(this->Y_modified[k+1]+2*this->Y_modified[k]);
+       A[2] = this->Y_modified[k]/(float)2;
+       A[3] = (1/(float)(6*h(k)))*(this->Y_modified[k+1]-this->Y_modified[k]);
        return A;
+   }
+
+   float g(float x){
+       long i = getInterval(x);
+       float * A = f(i);
+       float P3 = A[3]*(float)(x-this->Xs[i])*(float)(x-this->Xs[i])*(float)(x-this->Xs[i]);
+       float P2 = A[2]*(float)(x-this->Xs[i])*(float)(x-this->Xs[i]);
+       float P1 = A[1]*(float)(x-this->Xs[i]);
+       float P0 = A[0];
+       return P3 + P2 + P1 + P0;
    }
 
    float interpol(float x){
@@ -162,13 +164,7 @@ public:
                return this->Y[i];
            }
        }
-       long i = getInterval(x);
-       float * A = f(i);
-       float P3 = A[3]*(float)(x-this->Xs[i])*(float)(x-this->Xs[i])*(float)(x-this->Xs[i]);
-       float P2 = A[2]*(float)(x-this->Xs[i])*(float)(x-this->Xs[i]);
-       float P1 = A[1]*(float)(x-this->Xs[i]);
-       float P0 = A[0];
-       return P3 + P2 + P1 + P0;
+       return g(x);
    }
 
    vector<long> * getXs(){

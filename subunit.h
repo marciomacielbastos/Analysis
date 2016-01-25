@@ -19,10 +19,9 @@
 #ifndef SUBUNIT_H
 #define SUBUNIT_H
 #include <map>
-#include </home/marcio/Marcio/Analysis/Analysis/point.h>
+#include <point.h>
 #include <queue>
 using namespace std;
-
 
 class SubUnit{
 private:

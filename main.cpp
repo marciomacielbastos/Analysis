@@ -1,16 +1,17 @@
 
 #include <iostream>
-#include </home/marcio/Marcio/Analysis/Analysis/csvmanager.h>
+#include <csvmanager.h>
 #include <iomanip>      // std::put_time
 #include <ctime>        // std::time_t, struct std::tm, std::localtime
 #include <chrono>
-#include </home/marcio/Marcio/Analysis/Analysis/point.h>
+#include <point.h>
 #include <vector>
-#include </home/marcio/Marcio/Analysis/Analysis/realestate.h>
-#include </home/marcio/Marcio/Analysis/Analysis/kernel.h>
-#include </home/marcio/Marcio/Analysis/Analysis/spline.h>
-#include </home/marcio/Marcio/Analysis/Analysis/matrix.h>
+#include <realestate.h>
+#include <kernel.h>
+#include <spline.h>
+#include <matrix.h>
 #include <cmath>
+#include <lagrange.h>
 #include <sstream>
 
 using namespace std;
@@ -26,39 +27,40 @@ int main(){
 //    output = argv[2];
 //    Spline(2);
 
-    Kernel k("/tmp/bl(sample).csv", "/tmp/bdv(sample).csv", "/home/marcio/Marcio/RealEstateFiles/teste.csv", 10, true);
-    k.setStartDate("2003-01-01");
-    k.setDt(6);
-    k.feedBunchPt();
-    k.start();
-//    vector<long> x;
-//    x.push_back(0);
-//    x.push_back(1);
-//    x.push_back(2);
-//    x.push_back(3);
-//    x.push_back(5);
-//    x.push_back(6);
-////    x.push_back(60);
-////    x.push_back(70);
+    Spline s;
+//    Kernel k("/tmp/bl(sample).csv", "/tmp/bdv(sample).csv", "/home/marcio/Marcio/RealEstateFiles/teste.csv", 10, true);
+//    k.setStartDate("2003-01-01");
+//    k.setDt(6);
+//    k.feedBunchPt();
+//    k.start();
+    vector<long> x;
+    x.push_back(0);
+    x.push_back(1);
+    x.push_back(2);
+    x.push_back(3);
+    x.push_back(5);
+    x.push_back(6);
+//    x.push_back(60);
+//    x.push_back(70);
 
-//    vector<float> y;
-//    y.push_back(6);
-//    y.push_back(10);
-//    y.push_back(12);
-//    y.push_back(12);
-//    y.push_back(6);
-//    y.push_back(0);
-////    y.push_back(3600);
-////    y.push_back(7900);
+    vector<float> y;
+    y.push_back(6);
+    y.push_back(10);
+    y.push_back(12);
+    y.push_back(12);
+    y.push_back(6);
+    y.push_back(0);
+//    y.push_back(3600);
+//    y.push_back(7900);
 
 //    Spline s;
-//    s.load(x, y);
-//    float j = 0;
-//    while(j <= 4){
-//        float k = s.interpol(j);
-//        j += 0.25f;
-//        cout<<k<<", ";
-//    }
+    s.load(x, y);
+    float j = 0;
+    while(j <= 4){
+        float k = s.interpol(j);
+        j += 0.25f;
+        cout<<k<<", ";
+    }
 
 //    float **matrix;
 //    matrix =new (nothrow) float*[3];
