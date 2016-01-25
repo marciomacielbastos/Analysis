@@ -19,9 +19,8 @@
 #ifndef SUBUNIT_H
 #define SUBUNIT_H
 #include <map>
-#include <point.h>
+#include </home/marcio/Marcio/Analysis/Analysis/point.h>
 #include <queue>
-#include <interpol.h>
 using namespace std;
 
 
@@ -46,8 +45,6 @@ public:
 //        for(map<long, Point>::iterator it = timeSeries.begin(); it != timeSeries.end(); it++){
 
 //        }
-        Interpol i(&timeSeries);
-        i.calcHlist();
     }
 };
 

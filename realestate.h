@@ -18,11 +18,12 @@
 
 #ifndef REALESTATE_H
 #define REALESTATE_H
-#include <unit.h>
+#include </home/marcio/Marcio/Analysis/Analysis/unit.h>
 #include <queue>
 #include <map>
-#include <point.h>
+#include </home/marcio/Marcio/Analysis/Analysis/point.h>
 #include <ctime>
+#include <vector>
 
 using namespace std;
 
@@ -36,6 +37,7 @@ protected:
     long inf;
     long sup;
     map<long,Unit> units;
+    vector<string> series;
 
 public:
     RealEstate(long inf, long sup){
@@ -97,9 +99,19 @@ public:
 
     void interpol(){
         for(auto i: this->units){
-           string k = (i.second).interpol();
-           k = "";
+           string series = this->units[i.first].interpol();
+           series = Unit::floatToString(i.first)+","+series;
+           this->series.push_back(series);
         }
+        map<long,Unit>().swap(this->units);
+    }
+
+    vector<string> getSeries(){
+        return this->series;
+    }
+
+    void clearSeries(){
+        vector<string>().swap(this->series);
     }
 };
 

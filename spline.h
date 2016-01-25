@@ -18,9 +18,8 @@
 
 #ifndef SPLINE_H
 #define SPLINE_H
-#include <interpolchain.h>
 #include <map>
-#include <point.h>
+#include </home/marcio/Marcio/Analysis/Analysis/point.h>
 #include <cmath>
 #include <vector>
 #include <queue>
@@ -29,7 +28,7 @@ class Spline{
 private:
     vector<long> Xs;
     vector<float> Y;
-    float* Yp;
+    vector<float> Yp;
 
     vector<long> setXs(map<long,Point> timeSeries){
         map<long,Point>::iterator it = timeSeries.begin();
@@ -50,11 +49,10 @@ private:
         return Ys;
     }
 
-    float* setYp(long i){
-        float* Yp = new float[i];
-        while(i){
-            Yp[i] = 0;
-            --i;
+    vector<float> setYp(){
+        vector<float> Yp;
+        for(auto  i : this->Xs){
+            Yp.push_back(0);
         }
         return Yp;
     }
@@ -65,7 +63,14 @@ public:
 
 
    long h(long i){
-       return this->Xs[i+1]-this->Xs[i];
+       long h_ = this->Xs[i+1]-this->Xs[i];
+       if(h_==0){
+           "teste";
+           cout<<i<<endl;
+       } else {
+           "mozo";
+       }
+       return h_;
    }
 
    long dy(long i){
@@ -93,18 +98,21 @@ public:
    }
 
    float r(long i){
-       return dy(i)/(float)h(i);
+       float r_ = dy(i)/(float)h(i);
+       return r_;
    }
 
    float d(long i){
-       return 6*(r(i)-r(i-1));
+       float d_ = 6*(r(i)-r(i-1));
+       return d_;
    }
 
    float d_(long i){
        if(i == 1){
            return d(i)/(float)b(i);
        } else {
-          return (d(i)-a(i)*d_(i-1))/(float)(b(i)-a(i)*c_(i-1));
+          float _d = (d(i)-a(i)*d_(i-1))/(float)(b(i)-a(i)*c_(i-1));
+          return _d;
        }
    }
 
@@ -118,17 +126,16 @@ public:
    void load(map<long,Point> timeSeries){
        this->Xs = setXs(timeSeries);
        this->Y = setYs(timeSeries);
-       this->Yp = setYp(timeSeries.size());
+       this->Yp = setYp();
        solveTridiagonal();
    }
 
-   void load(vector<long> x, vector<float> y){
+  bool load(vector<long> x, vector<float> y){
        this->Xs = x;
        this->Y = y;
-       this->Yp = setYp(y.size());
-       this->Yp[0] = 0;
-       this->Yp[x.size()-1] = 0;
+       this->Yp = setYp();
        solveTridiagonal();
+       return true;
    }
 
    long getInterval(float x){
@@ -161,7 +168,6 @@ public:
        float P2 = A[2]*(float)(x-this->Xs[i])*(float)(x-this->Xs[i]);
        float P1 = A[1]*(float)(x-this->Xs[i]);
        float P0 = A[0];
-       delete A;
        return P3 + P2 + P1 + P0;
    }
 

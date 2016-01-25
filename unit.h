@@ -18,11 +18,11 @@
 
 #ifndef UNIT_H
 #define UNIT_H
-#include <subunit.h>
+#include </home/marcio/Marcio/Analysis/Analysis/subunit.h>
 #include <map>
 #include <queue>
-#include <point.h>
-#include <spline.h>
+#include </home/marcio/Marcio/Analysis/Analysis/point.h>
+#include </home/marcio/Marcio/Analysis/Analysis/spline.h>
 #include <sstream>
 
 class Unit
@@ -30,7 +30,6 @@ class Unit
 private:
     map<string,SubUnit> subunits;
     map<long,Point> timeSeries;
-    Spline s;
 
 public:
     Unit(){}
@@ -69,21 +68,45 @@ public:
 //        c = 0;
 //    }
 
+    static string floatToString(float val){
+        std::stringstream ss;
+        ss << val;
+        ss.flush();
+        string s(ss.str());
+        return s;
+    }
+
+    static string floatToString(long val){
+        std::stringstream ss;
+        ss << val;
+        ss.flush();
+        string s(ss.str());
+        return s;
+    }
+
+    Spline load(){
+        Spline s;
+        s.load(this->timeSeries);
+        map<long,Point>().swap(this->timeSeries);
+        return s;
+    }
+
     string interpol(){
-        this->s.load((this->timeSeries));
+        Spline s = load();
         string series = "[";
-        string temp_;
-        stringstream ss (stringstream::in | stringstream::out);
-        vector<long> * temp = this->s.getXs();
-        long firstX = (*temp)[0];
+        long firstX;
         long lastX = Point::getSlot("2015-01-01");
+        {
+            vector<long> * temp = s.getXs();
+            firstX= (*temp)[0];
+        }
+        float val;
         for(;firstX <= lastX ; firstX++){
-            ss << s.interpol(firstX);
+            val = s.interpol(firstX);
             if(firstX != lastX){
-                ss >> temp_;
-                series += (temp_+",");
+                series += (floatToString(val)+",");
             } else {
-               series += (ss.str()+"]");
+               series += (floatToString(val)+"]");
             }
         }
         return series;

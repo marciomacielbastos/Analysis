@@ -21,8 +21,8 @@
 #include <vector>
 #include <queue>
 #include <thread>
-#include <realestate.h>
-#include <csvmanager.h>
+#include </home/marcio/Marcio/Analysis/Analysis/realestate.h>
+#include </home/marcio/Marcio/Analysis/Analysis/csvmanager.h>
 #include <iostream>
 using namespace std;
 
@@ -34,6 +34,7 @@ private:
     vector<long> bbls;
     string output;
     vector<RealEstate> re;
+    vector<string> completeSeries;
     int num_threads;
     CSVManager cs;
     bool key;
@@ -42,7 +43,7 @@ public:
     Kernel(string bblslist, string input, string output, int n){
         this->cs = CSVManager(input);
         this->output = output;
-        this->num_threads =n;
+        this->num_threads = n;
         this->key = false;
         this->bbl_area = loadBBLS(bblslist);
         shareBBLs();
@@ -77,7 +78,7 @@ public:
         long bbl;
         float area;
         CSVManager cs(bblslist);
-        queue<string> fl = cs.read(true);
+        queue<string> fl = cs.readLine();
         while(!fl.empty()){
             bbl = atol(fl.front().c_str());
             fl.pop();
@@ -85,7 +86,7 @@ public:
             bbl_area[bbl] = area;
             fl.pop();
             this->bbls.push_back(bbl);
-            fl = cs.read(true);
+            fl = cs.readLine();
         }
         return bbl_area;
     }
@@ -115,7 +116,7 @@ public:
     }
 
     bool getTup(){
-        queue<string> fl = this->cs.read(true);
+        queue<string> fl = this->cs.readLine();
         if (!fl.empty()){
             tup = fl;
             return true;
@@ -156,9 +157,17 @@ public:
        }
     }
 
+    static void interpol(RealEstate *re){
+        re->interpol();
+    }
+
     void start(){
-        for(auto i : this->re){
-            i.interpol();
+        thread t[this->num_threads];
+        for(int i = 0; i < this->num_threads ; i++){
+            t[i] = thread(interpol, &(this->re[i]));
+        }
+        for(int i = 0; i < this->num_threads ; i++){
+            t[i].join();
         }
     }
 };

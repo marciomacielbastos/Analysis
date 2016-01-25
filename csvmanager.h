@@ -33,6 +33,13 @@ using namespace std;
 class CSVManager{
 private:
     std::ifstream file;
+
+    /*
+     * setLine() : tokenize each attribute of the line tuple,
+     * remove \" and add them to a queue;
+     * attribute line: tuple of attributes written as string;
+     * return: a queue of attributes (strings) without \";
+     */
     queue<string> setLine(string line){
         string token;
         istringstream ss(line);
@@ -53,6 +60,11 @@ public:
         this->file = ifstream(filename);
     }
 
+    /*
+     * readQueue(): read each line of the file and push them in a queue of
+     * queue of attributes;
+     * return: a queue of queue of attributes (strings);
+     */
     queue<queue<string>> readQueue(){
         string line;
         queue<queue<string>> que;
@@ -65,6 +77,11 @@ public:
         return que;
     }
 
+    /*
+     * readVector(): read each line of the file and push them in a vector of
+     * queue of attributes;
+     * return: a vector of queue of attributes (strings);
+     */
     vector<queue<string>> readVector(){
         string line;
         vector<queue<string>> vec;
@@ -77,17 +94,36 @@ public:
         return vec;
     }
 
-    queue<string> read(bool b){
-        if(b){}
+    /*
+     * readLine(): read and return each line of the file as a queue of attributes;
+     * attribute line: tuple of attributes written as string;
+     * return : a queue of attributes (strings);
+     */
+    queue<string> readLine(){
         string line;
         if ( file.good() ){
              getline ( file, line,'\n');
              return setLine(line);
         } else {
             this->file.close();
-            queue<string> empty;
-            return empty;
+            return queue<string>();
         }
+    }
+
+
+    /*
+     * write(): write the time series for each bbl as a tuple;
+     * vector<string> series: vector of the tuple (bbl, time series) written as string;
+     * output: string with the path of where the series will be written;
+     * return: void;
+     */
+    void write(vector<string> series, string output){
+        std::fstream outfile;
+        outfile.open (output, std::fstream::in | std::fstream::out | std::fstream::app);
+        for(auto i : series){
+            outfile << i+"\n";
+        }
+        outfile.close();
     }
 };
 
