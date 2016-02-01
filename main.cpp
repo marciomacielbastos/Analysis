@@ -28,11 +28,11 @@ int main(){
 //    Spline(2);
 
     Spline s;
-//    Kernel k("/tmp/bl(sample).csv", "/tmp/bdv(sample).csv", "/home/marcio/Marcio/RealEstateFiles/teste.csv", 10, true);
-//    k.setStartDate("2003-01-01");
-//    k.setDt(6);
-//    k.feedBunchPt();
-//    k.start();
+    Kernel k("/home/marcio/Marcio/bbl_sample.csv", "/home/marcio/Marcio/pluto_sample.csv", "/home/marcio/Marcio/RealEstateFiles/teste.csv", 10, true);
+    k.setStartDate("2003-01-01");
+    k.setDt(6);
+    k.feedBunchPt();
+    k.start();
     vector<long> x;
     x.push_back(0);
     x.push_back(1);

@@ -29,9 +29,14 @@ class Unit{
 private:
     map<string,SubUnit> subunits;
     map<long,Point> timeSeries;
+    float area;
 
 public:
     Unit(){}
+
+    Unit(float area){
+        this->area = area;
+    }
 
     void add(queue<string> su){
         string su_id = su.front();
@@ -46,6 +51,17 @@ public:
         }
     }
 
+
+    void addPt(Point p){
+        map<long,Point>::iterator it;
+        it = this->timeSeries.find(p.getSlot());
+        if (it!= this->timeSeries.end()){
+            timeSeries[it->first] = it->second + p;
+        } else {
+            this->timeSeries[p.getSlot()] = p;
+        }
+    }
+
     void addPt(queue<string> p){
         Point pt(p);
         map<long,Point>::iterator it;
@@ -57,15 +73,15 @@ public:
         }
     }
 
-//    void interpol(){
-////        for(map<string, SubUnit>::iterator it = subunits.begin(); it != subunits.end(); it++){
-////            (it->second).interpol();
-////        }
-//        this->s.load((this->timeSeries));
-//        float c = 1.5;
-//        c = this->s.interpol(c);
-//        c = 0;
-//    }
+    void addPt(queue<string> p, bool key){
+        if(key){
+            Point pt(p);
+            pt.setPrice(pt.getPrice()/(float)this->area);
+            addPt(pt);
+        } else {
+           addPt(p);
+        }
+    }
 
     static string floatToString(float val){
         std::stringstream ss;

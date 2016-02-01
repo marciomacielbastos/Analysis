@@ -157,6 +157,10 @@ public:
         return price;
     }
 
+    void setPrice(float price){
+        this->price = price;
+    }
+
     Point operator + (Point pto){
         float num = this->price*(this->n) + pto.getPrice();
         this->n++;

@@ -38,6 +38,7 @@ protected:
     long sup;
     map<long,Unit> units;
     vector<string> series;
+    static map<long, float> bbl_area;
 
 public:
     RealEstate(long inf, long sup){
@@ -47,6 +48,10 @@ public:
 
     static void setDt(long dt){
         Point::setDt(dt);
+    }
+
+    static void setBbl_area(map<long, float> bbl_area){
+        RealEstate::bbl_area = bbl_area;
     }
 
     static void setStartDate(string startDate){
@@ -87,10 +92,11 @@ public:
             map<long,Unit>::iterator it;
             it = this->units.find(bbl);
             if (it!= this->units.end()){
-                this->units[bbl].addPt(tup);
+                this->units[bbl].addPt(tup, true);
             } else {
-                this->units[bbl] = Unit();
-                this->units[bbl].addPt(tup);
+                float area = this->bbl_area[bbl];
+                this->units[bbl] = Unit(area);
+                this->units[bbl].addPt(tup, true);
             }
         } else {
             return;

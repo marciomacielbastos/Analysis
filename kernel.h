@@ -26,11 +26,12 @@
 #include <iostream>
 using namespace std;
 
+map<long, float> RealEstate::bbl_area = map<long, float>();
+
 queue<string> tup;
 
 class Kernel{
 private:
-    map<long, float> bbl_area;
     vector<long> bbls;
     string output;
     vector<RealEstate> re;
@@ -45,7 +46,7 @@ public:
         this->output = output;
         this->num_threads = n;
         this->key = false;
-        this->bbl_area = loadBBLS(bblslist);
+        RealEstate::setBbl_area(loadBBLS(bblslist));
         shareBBLs();
     }
 
@@ -54,7 +55,7 @@ public:
         this->output = output;
         this->num_threads =n;
         this->key = key;
-        this->bbl_area = loadBBLS(bblslist);
+        RealEstate::setBbl_area(loadBBLS(bblslist));
         shareBBLs();
     }
 
