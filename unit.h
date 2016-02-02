@@ -30,13 +30,12 @@ private:
     map<string,SubUnit> subunits;
     map<long,Point> timeSeries;
     float area;
+    bool merge_key;
 
 public:
-    Unit(){}
+    Unit():merge_key(false){}
 
-    Unit(float area){
-        this->area = area;
-    }
+    Unit(float area):area(area), merge_key(false){}
 
     void add(queue<string> su){
         string su_id = su.front();
@@ -125,6 +124,49 @@ public:
             }
         }
         return series;
+    }
+
+    map<string,SubUnit> getSubunits(){
+        return this->subunits;
+    }
+
+    map<long,Point> getTimeSeries(){
+        return this->timeSeries;
+    }
+
+    float getArea(){
+        return this->area;
+    }
+
+    bool getMerged(){
+        return this->merge_key;
+    }
+
+    void was_merged(){
+        this->merge_key = true;
+    }
+
+    void appendTimeSeries(map<long,Point> ts){
+        this->timeSeries.insert(ts.begin(), ts.end());
+    }
+
+    void merge(Unit u){
+       appendTimeSeries(u.getTimeSeries());
+    }
+
+    Unit(const Unit& u){
+        this->subunits = u.subunits;
+        this->timeSeries = u.timeSeries;
+        this->area = u.area;
+        this->merge_key = u.merge_key;
+    }
+
+    Unit copy(){
+        return Unit(*this);
+    }
+
+    Unit operator =(const Unit& u){
+        return u;
     }
 };
 

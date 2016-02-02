@@ -21,50 +21,51 @@
 #include <vector>
 #include <queue>
 #include <thread>
-#include <realestate.h>
+#include <thread_bucket.h>
 #include <csvmanager.h>
 #include <iostream>
 using namespace std;
 
-map<long, float> RealEstate::bbl_area = map<long, float>();
+map<long, float> ThreadBucket::bbl_area = map<long, float>();
+map<long, long> ThreadBucket::old_bbls_lookup_table = map<long, long>();
 
 queue<string> tup;
 
-class Kernel{
+class RealEstate{
 private:
     vector<long> bbls;
     string output;
-    vector<RealEstate> re;
+    vector<ThreadBucket> tb_vector;
     vector<string> completeSeries;
     int num_threads;
     CSVManager cs;
     bool key;
 
 public:
-    Kernel(string bblslist, string input, string output, int n){
+    RealEstate(string bblslist, string input, string output, int n){
         this->cs = CSVManager(input);
         this->output = output;
         this->num_threads = n;
         this->key = false;
-        RealEstate::setBbl_area(loadBBLS(bblslist));
+        ThreadBucket::setBbl_area(loadBBLS(bblslist));
         shareBBLs();
     }
 
-    Kernel(string bblslist, string input, string output, int n, bool key){
+    RealEstate(string bblslist, string input, string output, int n, bool key){
         this->cs = CSVManager(input);
         this->output = output;
         this->num_threads =n;
         this->key = key;
-        RealEstate::setBbl_area(loadBBLS(bblslist));
+        ThreadBucket::setBbl_area(loadBBLS(bblslist));
         shareBBLs();
     }
 
     void setStartDate(string startDate){
-        RealEstate::setStartDate(startDate);
+        ThreadBucket::setStartDate(startDate);
     }
 
     void setDt(long dt){
-        RealEstate::setDt(dt);
+        ThreadBucket::setDt(dt);
     }
 
     void setBblArea(){
@@ -92,6 +93,23 @@ public:
         return bbl_area;
     }
 
+    map<long, long> load_bbl_lookup_table(string path_to_oldbbl_lookpu_table){
+        map<long, long> bbl_oldbbl;
+        long bbl;
+        long oldbbl;
+        CSVManager cs(path_to_oldbbl_lookpu_table);
+        queue<string> fl = cs.readLine();
+        while(!fl.empty()){
+            bbl = atol(fl.front().c_str());
+            fl.pop();
+            oldbbl = atol(fl.front().c_str());
+            bbl_oldbbl[bbl] = oldbbl;
+            fl.pop();
+            fl = cs.readLine();
+        }
+        return bbl_oldbbl;
+    }
+
     void shareBBLs(){
         long offset = this->bbls.size() % this->num_threads;
         long len = this->bbls.size() / this->num_threads;
@@ -109,8 +127,8 @@ public:
             }
             b = this->bbls[begin];
             e = this->bbls[end];
-            RealEstate re = RealEstate(b, e);
-            this->re.push_back(re);
+            ThreadBucket re = ThreadBucket(b, e);
+            this->tb_vector.push_back(re);
         }
         //Empty this->bbls, since it will be not used anymore
         vector<long>().swap(this->bbls);
@@ -126,11 +144,11 @@ public:
         }
     }
 
-    static void feed(RealEstate *re){
+    static void feed(ThreadBucket *re){
         re->add(tup);
     }
 
-    static void feedPt(RealEstate *re){
+    static void feedPt(ThreadBucket *re){
         re->addPt(tup);
     }
 
@@ -138,34 +156,52 @@ public:
         thread t[this->num_threads];
         while(getTup()){
             for(int i = 0; i < this->num_threads ; i++){
-                t[i] = thread(feed, &(this->re[i]));
+                t[i] = thread(feed, &(this->tb_vector[i]));
             }
             for(int i = 0; i < this->num_threads ; i++){
                 t[i].join();
             }
        }
+       ThreadBucket::setBbl_area(map<long, float>());
     }
 
     void feedBunchPt(){
         thread t[this->num_threads];
         while(getTup()){
             for(int i = 0; i < this->num_threads ; i++){
-                t[i] = thread(feedPt, &(this->re[i]));
+                t[i] = thread(feedPt, &(this->tb_vector[i]));
             }
             for(int i = 0; i < this->num_threads ; i++){
                 t[i].join();
             }
        }
+       ThreadBucket::setBbl_area(map<long, float>());
     }
 
-    static void interpol(RealEstate *re){
+    static void bbl_synthesis(ThreadBucket *tb){
+        tb->bbl_synthesize();
+    }
+
+    void synthesize_bbls(string path_to_oldbbl_lookpu_table){
+        ThreadBucket::setOldBblLookupTable(load_bbl_lookup_table(path_to_oldbbl_lookpu_table));
+        thread t[this->num_threads];
+        for(int i = 0; i < this->num_threads ; i++){
+            t[i] = thread(bbl_synthesis, &(this->tb_vector[i]));
+        }
+        for(int i = 0; i < this->num_threads ; i++){
+            t[i].join();
+        }
+        ThreadBucket::setOldBblLookupTable(map<long, long>());
+    }
+
+    static void interpol(ThreadBucket *re){
         re->interpol();
     }
 
     void start(){
         thread t[this->num_threads];
         for(int i = 0; i < this->num_threads ; i++){
-            t[i] = thread(interpol, &(this->re[i]));
+            t[i] = thread(interpol, &(this->tb_vector[i]));
         }
         for(int i = 0; i < this->num_threads ; i++){
             t[i].join();

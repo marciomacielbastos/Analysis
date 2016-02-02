@@ -31,7 +31,7 @@ long Point::dt = 0;
 time_t Point::startDate = Point::strToTime("1980-01-01");
 
 
-class RealEstate{
+class ThreadBucket{
 
 protected:
     long inf;
@@ -39,9 +39,10 @@ protected:
     map<long,Unit> units;
     vector<string> series;
     static map<long, float> bbl_area;
+    static map<long, long> old_bbls_lookup_table;
 
 public:
-    RealEstate(long inf, long sup){
+    ThreadBucket(long inf, long sup){
         this->inf = inf;
         this->sup = sup;
     }
@@ -50,8 +51,12 @@ public:
         Point::setDt(dt);
     }
 
+    static void setOldBblLookupTable(map<long, long> bbl_oldbbl){
+        ThreadBucket::old_bbls_lookup_table = bbl_oldbbl;
+    }
+
     static void setBbl_area(map<long, float> bbl_area){
-        RealEstate::bbl_area = bbl_area;
+        ThreadBucket::bbl_area = bbl_area;
     }
 
     static void setStartDate(string startDate){
@@ -100,6 +105,31 @@ public:
             }
         } else {
             return;
+        }
+    }
+
+    Unit bbl_synthesis(long bbl_son){
+        long bbl_father = this->old_bbls_lookup_table[bbl_son];
+        Unit u(this->units[bbl_son]);
+        if(bbl_father){
+            u.merge(bbl_synthesis(bbl_father));
+            this->units[bbl_father].was_merged();
+        }
+        return u;
+    }
+
+    void bbl_synthesize(){
+        //Iteracting throug units merging the old and new bbls in a unique time series
+        for(map<long,Unit>::iterator it = this->units.begin(); it != this->units.end(); it++){
+            if(!(it->second).getMerged()){
+                it->second = bbl_synthesis(it->first);
+            }
+        }
+        //Removing the units that suffered merge
+        for(map<long,Unit>::iterator it = this->units.begin(); it != this->units.end(); it++){
+            if(!(it->second).getMerged()){
+                this->units.erase(it);
+            }
         }
     }
 

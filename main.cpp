@@ -6,8 +6,8 @@
 #include <chrono>
 #include <point.h>
 #include <vector>
-#include <realestate.h>
-#include <kernel.h>
+#include <thread_bucket.h>
+#include <real_estate.h>
 #include <spline.h>
 #include <matrix.h>
 #include <cmath>
@@ -28,11 +28,10 @@ int main(){
 //    Spline(2);
 
     Spline s;
-    Kernel k("/home/marcio/Marcio/bbl_sample.csv", "/home/marcio/Marcio/pluto_sample.csv", "/home/marcio/Marcio/RealEstateFiles/teste.csv", 10, true);
-    k.setStartDate("2003-01-01");
-    k.setDt(6);
-    k.feedBunchPt();
-    k.start();
+    RealEstate re("/home/marcio/Marcio/bbl_sample.csv", "/home/marcio/Marcio/pluto_sample.csv", "/home/marcio/Marcio/RealEstateFiles/teste.csv", 10, true);
+    re.setStartDate("2003-01-01");
+    re.setDt(6);
+    re.feedBunchPt();
     vector<long> x;
     x.push_back(0);
     x.push_back(1);

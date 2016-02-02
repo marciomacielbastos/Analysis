@@ -13,12 +13,12 @@ SOURCES += main.cpp
 
 HEADERS += \
     csvmanager.h \
-    kernel.h \
     subunit.h \
     point.h \
     unit.h \
-    realestate.h \
     interpolchain.h \
     spline.h \
     matrix.h \
-    lagrange.h
+    lagrange.h \
+    thread_bucket.h \
+    real_estate.h
